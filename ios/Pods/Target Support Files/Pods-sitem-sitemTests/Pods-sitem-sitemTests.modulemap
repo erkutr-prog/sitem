@@ -1,0 +1,6 @@
+module Pods_sitem_sitemTests {
+  umbrella header "Pods-sitem-sitemTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

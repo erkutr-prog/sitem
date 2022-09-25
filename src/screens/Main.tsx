@@ -68,6 +68,7 @@ const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
 
   //Fetching block data from firestore
   const fetchBlocks = useCallback(async () => {
+    
     const blocks = await getBlocks();
     setDataList(blocks);
   }, []);

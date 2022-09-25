@@ -1,0 +1,6 @@
+module HMSegmentedControl {
+  umbrella header "HMSegmentedControl-umbrella.h"
+
+  export *
+  module * { export * }
+}
