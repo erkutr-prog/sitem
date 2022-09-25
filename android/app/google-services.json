@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "418648071483",
+    "project_id": "sitem-51ab4",
+    "storage_bucket": "sitem-51ab4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418648071483:android:622b476b46f093e5636b1e",
+        "android_client_info": {
+          "package_name": "com.app.sitem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418648071483-pnu5pn8a3vklqs5sus22n6a459gv9nq4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtjsEagQ6DeHNJq7c4C4DmpMNUrDedToo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418648071483-pnu5pn8a3vklqs5sus22n6a459gv9nq4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "418648071483-puu71vk3osmhk8nsenqlejuljt2u3e5f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.sitem"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
