@@ -18,7 +18,6 @@ const Login: NavigationFunctionComponent<Props> = ({loginCallback, componentId})
     async function onLogin() {
         await auth().signInWithEmailAndPassword(mail.toLowerCase(), password)
             .then((user) => {
-                console.log("**********user", user)
                 loginCallback(user);
             })
             .catch((error) => {
