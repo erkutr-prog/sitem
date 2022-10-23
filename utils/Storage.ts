@@ -1,4 +1,5 @@
 import firestore, {firebase} from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 import { Alert } from 'react-native';
 import { IApartments } from '../src/screens/BlockDetails';
 import {
@@ -9,12 +10,12 @@ import {
 
 import {IBlocks} from '../src/screens/Main';
 
-const data = require('./../store/data')
+const user = auth().currentUser
 
 const getBlocks = () => {
   return firestore()
     .collection('blocks')
-    .where('id' ,'==', data.userId)
+    .where('id' ,'==', user?.uid)
     .get()
     .then(collectionSnapshot => {
       const blockList: Array<IBlocks> = [];

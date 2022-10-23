@@ -7,7 +7,7 @@ import BlockDetails from "./src/screens/BlockDetails";
 import CustomCalendar from "./src/components/CustomCalendar";
 import Login from "./src/screens/Login";
 import Register from "./src/screens/Register";
-
+import Profile from './src/screens/Profile';
 
 Navigation.registerComponent('com.myApp.WelcomeScreen', () => App);
 Navigation.registerComponent('TopButton', () => TopButton);
@@ -16,6 +16,7 @@ Navigation.registerComponent('BlockDetails', () => BlockDetails);
 Navigation.registerComponent('CustomCalendar', () => CustomCalendar);
 Navigation.registerComponent('Login', () => Login)
 Navigation.registerComponent('Register', () => Register);
+Navigation.registerComponent('Profile', () => Profile);
 Navigation.events().registerAppLaunchedListener(() => {
    Navigation.setRoot({
      root: {

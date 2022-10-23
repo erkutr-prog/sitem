@@ -65,6 +65,8 @@ const App: NavigationFunctionComponent<Props> = ({componentId}) => {
     data.userId = user.uid;
     data.userMail = user.email;
     data.userName = user.displayName != null ? user.displayName : '';
+    data.userPhoto = user.photoURL;
+    data.userPhone = user.phoneNumber;
     setLoggedIn(true);
     setLoading(false)
   }

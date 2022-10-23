@@ -55,7 +55,7 @@ const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
             component: {
               name: 'TopButton',
               passProps: {
-                iconName: 'add',
+                iconName: 'person',
                 currentComponentId: componentId,
               },
             },

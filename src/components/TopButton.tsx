@@ -18,14 +18,12 @@ const TopButton: NavigationFunctionComponent<Props> = ({
   cbFunction
 }) => {
   function navigateToAdd() {
-    if(iconName == 'add') {
+    if(iconName == 'person') {
       Navigation.push(currentComponentId, {
         component: {
-          name: 'AddBlock'
+          name: 'Profile'
         },
       });
-    } else if (iconName == 'person' && cbFunction != undefined) {
-      cbFunction();
     }
   }
 
