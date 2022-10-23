@@ -50,7 +50,7 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
             component: {
               name: 'TopButton',
               passProps: {
-                iconName: 'person',
+                iconName: 'cash-outline',
                 currentComponentId: componentId,
                 cbFunction: toggleModal,
               },

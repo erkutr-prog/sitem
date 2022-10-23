@@ -7,19 +7,21 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import {colors} from '../assets/colors';
+import auth from '@react-native-firebase/auth';
 
 import {addBlocks} from './../../utils/Storage';
 
-const data = require('./../../store/data')
 
 const AddBlock: NavigationFunctionComponent = ({
   componentId,
 }) => {
+  const userId = auth().currentUser?.uid
   const [newBlock, setNewBlock] = useState({
-    id: data.userId,
+    id: userId != undefined ? userId : '',
     name: '',
     numofrooms: '',
     price: '',
@@ -42,24 +44,11 @@ const AddBlock: NavigationFunctionComponent = ({
 
   return (
     <SafeAreaView
-      style={{
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: colors.TEXT_LIGHT,
-      }}>
+      style={styles.container}>
       <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginHorizontal: 10,
-        }}>
+        style={styles.blockNameContainer}>
         <Text
-          style={{
-            color: colors.TEXT_DARK,
-            marginRight: 'auto',
-            width: Dimensions.get('screen').width / 3,
-          }}>
+          style={styles.blockNameHeader}>
           Blok İsmi:
         </Text>
         <TextInput
@@ -71,30 +60,13 @@ const AddBlock: NavigationFunctionComponent = ({
               };
             });
           }}
-          style={{
-            width: (Dimensions.get('screen').width * 2) / 3,
-            height: 40,
-            borderWidth: 1,
-            margin: 12,
-            padding: 10,
-            borderRadius: 10,
-            borderColor: colors.TEXT_INPUT,
-          }}
+          style={styles.blockNameInput}
         />
       </View>
       <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginHorizontal: 10,
-        }}>
+        style={styles.roomNumberContainer}>
         <Text
-          style={{
-            color: colors.TEXT_DARK,
-            marginRight: 'auto',
-            width: Dimensions.get('screen').width / 3,
-          }}>
+          style={styles.roomNumberHeader}>
           Daire Sayısı:
         </Text>
         <TextInput
@@ -107,30 +79,13 @@ const AddBlock: NavigationFunctionComponent = ({
             });
           }}
           keyboardType="numeric"
-          style={{
-            width: (Dimensions.get('screen').width * 2) / 3,
-            height: 40,
-            borderWidth: 1,
-            margin: 12,
-            padding: 10,
-            borderRadius: 10,
-            borderColor: colors.TEXT_INPUT,
-          }}
+          style={styles.roomNumberInput}
         />
       </View>
       <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginHorizontal: 10,
-        }}>
+        style={styles.priceContainer}>
         <Text
-          style={{
-            color: colors.TEXT_DARK,
-            marginRight: 'auto',
-            width: Dimensions.get('screen').width / 3,
-          }}>
+          style={styles.priceHeader}>
           Aidat Ücreti:
         </Text>
         <TextInput
@@ -143,28 +98,13 @@ const AddBlock: NavigationFunctionComponent = ({
             });
           }}
           keyboardType="numeric"
-          style={{
-            width: (Dimensions.get('screen').width * 2) / 3,
-            height: 40,
-            borderWidth: 1,
-            margin: 12,
-            padding: 10,
-            borderRadius: 10,
-            borderColor: colors.TEXT_INPUT,
-          }}
+          style={styles.priceInput}
         />
       </View>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => onAdd()}
-        style={{
-          height: 40,
-          marginHorizontal: 10,
-          backgroundColor: colors.TEXT_GREEN,
-          borderRadius: 12,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+        style={styles.saveBtn}>
         <Text style={{alignSelf: 'center', color: colors.TEXT_INPUT}}>
           Kaydet
         </Text>
@@ -172,5 +112,81 @@ const AddBlock: NavigationFunctionComponent = ({
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: colors.TEXT_LIGHT,
+  },
+  blockNameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  blockNameInput: {
+    width: (Dimensions.get('screen').width * 2) / 3,
+    height: 40,
+    borderWidth: 1,
+    margin: 12,
+    padding: 10,
+    borderRadius: 10,
+    borderColor: colors.TEXT_INPUT,
+  },
+  blockNameHeader: {
+    color: colors.TEXT_DARK,
+    marginRight: 'auto',
+    width: Dimensions.get('screen').width / 3,
+  },
+  roomNumberContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  roomNumberHeader: {
+    color: colors.TEXT_DARK,
+    marginRight: 'auto',
+    width: Dimensions.get('screen').width / 3,
+  },
+  roomNumberInput: {
+    width: (Dimensions.get('screen').width * 2) / 3,
+    height: 40,
+    borderWidth: 1,
+    margin: 12,
+    padding: 10,
+    borderRadius: 10,
+    borderColor: colors.TEXT_INPUT,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  priceHeader: {
+    color: colors.TEXT_DARK,
+    marginRight: 'auto',
+    width: Dimensions.get('screen').width / 3,
+  },
+  priceInput: {
+    width: (Dimensions.get('screen').width * 2) / 3,
+    height: 40,
+    borderWidth: 1,
+    margin: 12,
+    padding: 10,
+    borderRadius: 10,
+    borderColor: colors.TEXT_INPUT,
+  },
+  saveBtn: {
+    height: 40,
+    marginHorizontal: 10,
+    backgroundColor: colors.TEXT_GREEN,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+})
 
 export default AddBlock;

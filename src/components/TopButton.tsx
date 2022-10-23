@@ -24,6 +24,8 @@ const TopButton: NavigationFunctionComponent<Props> = ({
           name: 'Profile'
         },
       });
+    } else if (iconName == 'cash-outline') {
+      cbFunction()
     }
   }
 
