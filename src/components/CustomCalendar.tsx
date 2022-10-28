@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   FlatList,
   Modal,
@@ -20,8 +21,8 @@ import {
 } from 'react-native-calendars/src/types';
 import moment from 'moment';
 import XDate from 'xdate';
-import {getPayment} from './../../utils/Storage';
-import {IApartments} from '../screens/BlockDetails';
+import {getPayment, deletePayment, getApartmentDetailsByApartmentId} from './../../utils/Storage';
+import {IApartments, paymentInfo} from '../screens/BlockDetails';
 import {colors} from '../assets/colors';
 
 type Props = {
@@ -38,6 +39,12 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
   const [price, setPrice] = useState('');
   const [note, setNote] = useState('');
   const [paymentSpinner, setPaymentSpinner] = useState(false);
+  const [LastPaymentInfo, setLastPaymentInfo] = useState<paymentInfo>({
+    date: '',
+    note: '',
+    price: ''
+  });
+  const [infoSectionVisible, setInfoSectionVisible] = useState(false);
   const [isPriceModalVisible, setPriceModalVisible] = useState(false);
   const currentDate = useRef('');
 
@@ -59,6 +66,18 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
         ],
       },
     });
+    refreshMarkedDates(false)
+  }, []);
+
+
+  const refreshMarkedDates = async (isRefresh: boolean) => {
+    var data: IApartments
+    if (isRefresh) {
+      data = await refreshApartmentData();
+    } else {
+      data = allData
+    }
+
     var initialSelectedDate = moment().format('YYYY-MM-DD');
     var initialMarkedDates: MarkedDates = {};
     initialMarkedDates[initialSelectedDate] = {
@@ -66,11 +85,11 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
       color: '#00B0BF',
       textColor: '#FFFFFF',
     };
-    for (let i = 0; i < allData.LastPayment.length; i++) {
+    for (let i = 0; i < data.LastPayment.length; i++) {
       let paymentDate = 'date' as string;
       let paymentPrice = 'price' as string;
       let paymentNote = 'note' as string;
-      let paymentInfo = allData.LastPayment[i];
+      let paymentInfo = data.LastPayment[i];
       initialMarkedDates[paymentInfo[paymentDate as keyof typeof paymentInfo]] =
         {
           selected: false,
@@ -84,7 +103,15 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
     }
     setMarkedDates(initialMarkedDates);
     currentDate.current = initialSelectedDate;
-  }, []);
+  }
+
+  const refreshApartmentData = async () => {
+    const response = await getApartmentDetailsByApartmentId(allData.id)
+    if (response !== undefined) {
+      return response[0]
+    } 
+    return allData
+  }
 
   const onSelectDay = (day: string) => {
     var previousDates: MarkedDates = {...markedDates};
@@ -119,6 +146,8 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
     setPaymentSpinner(true)
     const response = await savePayment()
     if (response == 'success') {
+      refreshMarkedDates(true)
+      onPressDay(currentDate.current, true)
       console.log("success")
     } else {
       console.log("failure");
@@ -191,6 +220,51 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
     );
   };
 
+  const onPressDay = async (day: string, isRefresh: boolean) => {
+    onSelectDay(day);
+    var data: IApartments;
+    if (isRefresh) {
+      data = await refreshApartmentData();
+    } else {
+      data = allData
+    }
+    if (Object.keys(markedDates).includes(day)) {
+      for (let i=0; i < data.LastPayment.length; i++) {
+        if (day == data.LastPayment[i].date) {
+          setLastPaymentInfo(data.LastPayment[i]);
+          setInfoSectionVisible(true)
+          break;
+        }
+      }
+    } else {
+      setInfoSectionVisible(false);
+      setLastPaymentInfo({date: '', note: '', price: ''})
+    }
+  }
+
+  const delPayment = async () => {
+    const response = await deletePayment(apartmentId, LastPaymentInfo)
+          .then(() => refreshMarkedDates(true))
+          .then(() => setInfoSectionVisible(false))
+  }
+
+  const customAlert = () => {
+    Alert.alert(
+      'Uyarı',
+      'Kaydı silmek istediğinize emin misiniz?',
+      [
+        {
+          text: 'Evet',
+          onPress: delPayment
+        },
+        {
+          text: 'Hayır',
+          onPress: () => {}
+        }
+      ]
+    )
+  }
+
   return (
     <View style={{flex: 1}}>
       <Modal
@@ -253,7 +327,7 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
       </Modal>
       <Calendar
         onDayPress={day => {
-          onSelectDay(day.dateString);
+          onPressDay(day.dateString, false)
         }}
         // Handler which gets executed on day long press. Default = undefined
         onDayLongPress={day => {
@@ -309,6 +383,24 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
         enableSwipeMonths={true}
         markedDates={markedDates}
       />
+      <View style={{flexDirection: 'row',display: infoSectionVisible ? 'flex' : 'none', margin: 10}}>
+        <View style={{height: 50, borderTopRightRadius: 15, borderBottomRightRadius: 15, width: Dimensions.get('screen').width * 0.9, backgroundColor: colors.LISTROW_BG, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingRight: 10 }}>
+            <View 
+              style={{height: 50, width: 10, backgroundColor: colors.TEXT_GREEN, borderTopRightRadius: 15, borderBottomRightRadius: 15}}
+            />
+                <Text style={{paddingLeft: 20, fontSize: 15}}>
+                  {LastPaymentInfo !== undefined ? LastPaymentInfo.note : null}
+                </Text>
+                <View style={{marginLeft: 'auto'}}>
+                  <Text style={{color: colors.TEXT_GREEN, fontWeight: 'bold'}}>
+                    {LastPaymentInfo !== undefined ? LastPaymentInfo.price : null}  {'₺'}
+                  </Text>
+                </View>
+        </View>
+        <TouchableOpacity style={{width: Dimensions.get('screen').width * 0.1, alignSelf: 'center'}} onPress={customAlert}>
+          <Ionicons name='trash-outline' size={25}/>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

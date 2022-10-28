@@ -1,12 +1,13 @@
 import firestore, {firebase} from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { Alert } from 'react-native';
-import { IApartments } from '../src/screens/BlockDetails';
+import { IApartments, paymentInfo } from '../src/screens/BlockDetails';
 import {
   DateData,
   Direction,
   MarkedDates,
 } from 'react-native-calendars/src/types';
+import { v4 as uuid } from 'uuid'
 
 import {IBlocks} from '../src/screens/Main';
 
@@ -45,7 +46,7 @@ const addBlocks = (blockId: string, block: IBlocks) => {
     const numberOfApartments = parseInt(block.numofrooms);
 
     for (let i=0; i < numberOfApartments; i++) {
-      const apartmentuuid = 'id' + new Date().getTime();
+      const apartmentuuid = 'id' + uuid();
       firestore()
         .collection('apartments')
         .doc()
@@ -96,5 +97,35 @@ const getPayment = (apartmentId: string, paymentData: object) => {
   
 }
 
+const deletePayment = (apartmentId: string, paymentData: paymentInfo) => {
+  return firestore()
+    .collection('apartments')
+    .doc(apartmentId)
+    .update({LastPayment: firestore.FieldValue.arrayRemove(paymentData)})
+} 
 
-export {getBlocks, addBlocks, getApartments, getPayment};
+const getApartmentDetailsByApartmentId = (apartmentId: string) => {
+  return firestore()
+  .collection('apartments')
+  .where('id', '==', apartmentId)
+  .get()
+  .then(collectionSnapshot => {
+    const apartmentList: Array<IApartments> = [];
+    collectionSnapshot.forEach(documentSnapshot => {
+      const data = documentSnapshot.data();
+      apartmentList.push({
+        'docId': documentSnapshot.ref.id,
+        'id': data.id,
+        'E-mail': data['E-mail'],
+        'Name': data['Name'],
+        'Phone': data['Phone'],
+        'LastPayment': data['LastPayment'],
+        'blockId': data['blockId']
+      })
+    })
+    return apartmentList;
+  })
+}
+
+
+export {getBlocks, addBlocks, getApartments, getPayment, deletePayment, getApartmentDetailsByApartmentId};

@@ -15,8 +15,14 @@ export interface IApartments {
   'E-mail': string,
   'Name': string,
   'Phone': string,
-  'LastPayment': Array<object>,
+  'LastPayment': Array<paymentInfo>,
   'blockId': string
+}
+
+export type paymentInfo = {
+  date: string,
+  price: string,
+  note: string
 }
 
 const BlockDetails: NavigationFunctionComponent<Props> = ({
