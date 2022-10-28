@@ -28,7 +28,7 @@ const App: NavigationFunctionComponent<Props> = ({componentId}) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
 
   const firebaseConfig = {
-    apiKey: "AIzaSyDtjsEagQ6DeHNJq7c4C4DmpMNUrDedToo", //YOUR API KEY
+    apiKey: "", //YOUR API KEY
     authDomain: "quizzy-1d621.firebaseapp.com",
     projectId: "sitem-51ab4",
     databaseURL: "https://sitem-51ab4.firebaseio.com/",
