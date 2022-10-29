@@ -30,6 +30,21 @@ type Props = {
   allData: IApartments;
 };
 
+const month = [
+  'Ocak',
+  'Şubat',
+  'Mart',
+  'Nisan',
+  'Mayıs',
+  'Haziran',
+  'Temmuz',
+  'Ağustos',
+  'Eylül',
+  'Ekim',
+  'Kasım',
+  'Aralık',
+];
+
 const CustomCalendar: NavigationFunctionComponent<Props> = ({
   apartmentId,
   allData,
@@ -115,10 +130,14 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
 
   const onSelectDay = (day: string) => {
     var previousDates: MarkedDates = {...markedDates};
-    if (currentDate.current != '') {
-      previousDates[currentDate.current]['selected'] = false;
-      previousDates[currentDate.current]['color'] = 'white';
-      previousDates[currentDate.current]['textColor'] = 'black';
+    if(Object.keys(previousDates).includes(currentDate.current) ) {
+      if (previousDates[currentDate.current]?.dotColor !== 'green') {
+        delete previousDates[currentDate.current]
+      } else {
+        previousDates[currentDate.current]['selected'] = false;
+        previousDates[currentDate.current]['color'] = 'white';
+        previousDates[currentDate.current]['textColor'] = 'black';
+      }
     }
     previousDates[day] = {
       selected: true,
@@ -173,20 +192,6 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
   }
 
   const renderHeader = (day: XDate | undefined) => {
-    const month = [
-      'Ocak',
-      'Şubat',
-      'Mart',
-      'Nisan',
-      'Mayıs',
-      'Haziran',
-      'Temmuz',
-      'Ağustos',
-      'Eylül',
-      'Ekim',
-      'Kasım',
-      'Aralık',
-    ];
     return (
       <View>
         <Text
@@ -221,6 +226,7 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
   };
 
   const onPressDay = async (day: string, isRefresh: boolean) => {
+    console.log("***************markeddates", markedDates);
     onSelectDay(day);
     var data: IApartments;
     if (isRefresh) {
@@ -228,6 +234,7 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
     } else {
       data = allData
     }
+    console.log("**************data", data);
     if (Object.keys(markedDates).includes(day)) {
       for (let i=0; i < data.LastPayment.length; i++) {
         if (day == data.LastPayment[i].date) {
@@ -337,6 +344,8 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
         monthFormat={'yyyy MM'}
         // Handler which gets executed when visible month changes in calendar. Default = undefined
         onMonthChange={month => {
+          refreshMarkedDates(true)
+          setInfoSectionVisible(false);
           console.log('month changed', month);
         }}
         theme={{

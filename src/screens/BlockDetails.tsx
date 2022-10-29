@@ -2,11 +2,13 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, View, TouchableOpacity, StyleSheet, Text, ActivityIndicator} from 'react-native';
 import {NavigationFunctionComponent, Navigation} from 'react-native-navigation';
 import { colors } from '../assets/colors';
-
-import {getApartments} from './../../utils/Storage'
+import { useDispatch, useSelector, Provider as ReduxProvider } from 'react-redux';
+import { AppDispatch, RootState} from './store';
+import { fetchApartments } from '../features/apartmentSlice';
+import store from './store'
 
 type Props = {
-  id: string;
+  blockId: string;
 };
 
 export interface IApartments {
@@ -25,10 +27,12 @@ export type paymentInfo = {
   note: string
 }
 
-const BlockDetails: NavigationFunctionComponent<Props> = ({
+const ApartmentList: NavigationFunctionComponent<Props> = ({
   componentId,
-  id,
+  blockId,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const screenState = useSelector((state: RootState) => state.apartmentList);
   const [dataList, setDataList] = useState<IApartments[]>([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -36,7 +40,7 @@ const BlockDetails: NavigationFunctionComponent<Props> = ({
   useEffect(() => {
     const listener = {
       componentDidAppear: () => {
-        fetchApartments();
+        dispatch(fetchApartments({blockId}))
       },
     };
     const unsubscribe = Navigation.events().registerComponentListener(
@@ -47,13 +51,6 @@ const BlockDetails: NavigationFunctionComponent<Props> = ({
       unsubscribe.remove();
     };
   }, []);
-
-
-  const fetchApartments = useCallback(async() => {
-    const apartments = await getApartments(id);
-    setDataList(apartments)
-    setLoading(false);
-  }, [])
 
   const navigateToCalendar = (docId: string, _allData: IApartments) => {
     Navigation.push(componentId, {
@@ -83,18 +80,29 @@ const BlockDetails: NavigationFunctionComponent<Props> = ({
 
   return (
     <View style={styles.container}>
-      {isLoading ? 
+      {screenState.loading ? 
         <ActivityIndicator style={{alignSelf: 'center'}} size={'large'}/>  
         :
         <FlatList
-        data={dataList}
+        data={screenState.apartments}
         renderItem={({item, index}) => <Item data={item} index={index}/>}
         keyExtractor={(item: IApartments) => item.id}
        />
-    }
+      }
     </View>
   )
 };
+
+const BlockDetails: NavigationFunctionComponent<Props> = ({
+  componentId,
+  blockId
+}) => {
+  return (
+    <ReduxProvider store={store}>
+        <ApartmentList componentId={componentId} blockId={blockId}/>
+    </ReduxProvider>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

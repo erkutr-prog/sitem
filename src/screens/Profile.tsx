@@ -50,8 +50,8 @@ const Profile: NavigationFunctionComponent<Props> = ({componentId}) => {
     data.userPhone = '';
     await auth()
       .signOut()
-      .then(() => Navigation.pop(componentId));
-  };
+      .then(() => Navigation.pop(componentId))
+    };
 
   return (
     <ScrollView

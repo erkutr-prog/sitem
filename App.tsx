@@ -10,15 +10,18 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import { Navigation, NavigationFunctionComponent } from 'react-native-navigation';
+import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import Main from './src/screens/Main';
-import * as firebase from '@react-native-firebase/firestore'
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
+import * as firebase from '@react-native-firebase/firestore';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {Provider as ReduxProvider} from 'react-redux';
+import store from './src/screens/store';
 import Login from './src/screens/Login';
-import ActionButton from 'react-native-action-button'
-import { colors } from './src/assets/colors';
+import ActionButton from 'react-native-action-button';
+import {colors} from './src/assets/colors';
+
 interface Props {
-  title: string
+  title: string;
 }
 
 const data = require('./store/data');
@@ -28,96 +31,100 @@ const App: NavigationFunctionComponent<Props> = ({componentId}) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
 
   const firebaseConfig = {
-    apiKey: "", //YOUR API KEY
-    authDomain: "quizzy-1d621.firebaseapp.com",
-    projectId: "sitem-51ab4",
-    databaseURL: "https://sitem-51ab4.firebaseio.com/",
-    storageBucket: "sitem-51ab4.appspot.com",
-    messagingSenderId: "",
-    appId: "1:418648071483:android:622b476b46f093e5636b1e",
+    apiKey: 'AIzaSyDtjsEagQ6DeHNJq7c4C4DmpMNUrDedToo', //YOUR API KEY
+    authDomain: 'quizzy-1d621.firebaseapp.com',
+    projectId: 'sitem-51ab4',
+    databaseURL: 'https://sitem-51ab4.firebaseio.com/',
+    storageBucket: 'sitem-51ab4.appspot.com',
+    messagingSenderId: '',
+    appId: '1:418648071483:android:622b476b46f093e5636b1e',
   };
-  
+
   if (Platform.OS == 'android' && !firebase.firebase.app.length) {
     var app;
-    if(!firebase.firebase.apps.length) {
+    if (!firebase.firebase.apps.length) {
       app = firebase.firebase.initializeApp(firebaseConfig);
-    } 
-  } 
+    }
+  }
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(userState => {
       if (userState) {
-        checkUserExistence(userState)
+        checkUserExistence(userState);
       } else {
         setLoggedIn(false);
-        setLoading(false)
+        setLoading(false);
       }
-    })
+    });
     return subscriber;
-  }, [])
+  }, []);
 
   useEffect(() => {
-    setLoading(true)
-  }, [])
+    setLoading(true);
+  }, []);
 
-
-  function checkUserExistence(user: FirebaseAuthTypes.User){
+  function checkUserExistence(user: FirebaseAuthTypes.User) {
     data.userId = user.uid;
     data.userMail = user.email;
     data.userName = user.displayName != null ? user.displayName : '';
     data.userPhoto = user.photoURL;
     data.userPhone = user.phoneNumber;
     setLoggedIn(true);
-    setLoading(false)
+    setLoading(false);
   }
 
-  const loginCb = (async function (user: FirebaseAuthTypes.User){
+  //Loginden sonra kullanıcı bilgisini set edip giriş yapıldı bilgisini set eden metod
+  const loginCb = async function (user: FirebaseAuthTypes.User) {
     await checkUserExistence(user);
     setLoggedIn(true);
-  })
+  };
 
   return (
+    <ReduxProvider store={store}>
+      <View style={styles.container}>
+        {isLoading ? (
+          <ActivityIndicator size={'large'} />
+        ) : (
           <View style={styles.container}>
-      {isLoading ? 
-        <ActivityIndicator size={'large'}/>
-      :
-        <View style={styles.container}>
-          {isLoggedIn ?
-          <Main componentId={componentId} loggedIn={isLoggedIn}/>
-          :
-          <Login componentId={componentId} loginCallback={(user: FirebaseAuthTypes.User) => loginCb(user)}/> 
-         }
-        </View>
-    }
-    {
-      isLoggedIn ? 
-      <ActionButton 
-      buttonColor={colors.TEXT_DARK}
-      onPress={() => {
-        Navigation.push(componentId, {
-          component: {
-            name: 'AddBlock'
-          },
-        });
-      }} />
-      : null
-    }
-    </View>
+            {isLoggedIn ? (
+              <Main componentId={componentId} loggedIn={isLoggedIn} />
+            ) : (
+              <Login
+                componentId={componentId}
+                loginCallback={(user: FirebaseAuthTypes.User) => loginCb(user)}
+              />
+            )}
+          </View>
+        )}
+        {isLoggedIn ? (
+          <ActionButton
+            buttonColor={colors.TEXT_DARK}
+            onPress={() => {
+              Navigation.push(componentId, {
+                component: {
+                  name: 'AddBlock',
+                },
+              });
+            }}
+          />
+        ) : null}
+      </View>
+    </ReduxProvider>
   );
 };
 
 App.options = {
   topBar: {
     title: {
-      text: 'Sitem'
-    }
-  }
-}
+      text: 'Sitem',
+    },
+  },
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
 export default App;

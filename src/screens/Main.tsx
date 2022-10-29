@@ -1,8 +1,11 @@
-import {StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import {colors} from './../assets/colors';
 import {getBlocks} from './../../utils/Storage';
+import {useDispatch, useSelector} from 'react-redux'
+import {AppDispatch, RootState} from './store';
+import {fetchBlocks} from './../features/blockSlice';
 
 type Props = {
   loggedIn: boolean
@@ -16,36 +19,14 @@ export interface IBlocks {
 }
 
 export interface BlockProps {
-  id: string;
+  blockId: string;
 }
 
 const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
-  const [dataList, setDataList] = useState<IBlocks[]>([]);
+  const dispatch = useDispatch<AppDispatch>()
+  const screenState = useSelector((state: RootState) => state.blockList);
 
   //Uygulama ilk açıldığında login bilgisini parenttan alıp o şekilde veritabanı isteği atıyoruz.
-  useEffect(() => {
-    if (loggedIn) {
-      fetchBlocks();
-    }
-  }, [loggedIn])
-
-  //Block List Screen event listener
-  useEffect(() => {
-    const listener = {
-      componentDidAppear: () => {
-        fetchBlocks();
-      },
-    };
-    const unsubscribe = Navigation.events().registerComponentListener(
-      listener,
-      componentId,
-    );
-    return () => {
-      unsubscribe.remove();
-    };
-  }, []);
-
-  //Top buttons of main screen
   useEffect(() => {
     Navigation.mergeOptions(componentId, {
       topBar: {
@@ -63,22 +44,45 @@ const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
         ],
       },
     });
+    if (loggedIn) {
+      dispatch(fetchBlocks())
+    }
+  }, [loggedIn])
+
+  //Block List Screen event listener
+  useEffect(() => {
+    const listener = {
+      componentDidAppear: () => {
+        dispatch(fetchBlocks())
+      },
+    };
+    const unsubscribe = Navigation.events().registerComponentListener(
+      listener,
+      componentId,
+    );
+    return () => {
+      unsubscribe.remove();
+    };
   }, []);
 
 
-  //Fetching block data from firestore
-  const fetchBlocks = useCallback(async () => {
-    
-    const blocks = await getBlocks();
-    setDataList(blocks);
-  }, []);
+
+  const errorMessage = () => {
+    return (
+      <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+        <Text style={{alignSelf: 'center'}}>
+          Bilgilerinizi çekerken bir hata oluştu.
+        </Text>
+      </View>
+    )
+  }
 
   function navigateToDetails(id: string) {
     Navigation.push<BlockProps>(componentId, {
       component: {
         name: 'BlockDetails',
         passProps: {
-          id: id,
+          blockId: id,
         },
       },
     });
@@ -98,11 +102,21 @@ const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={dataList}
-        renderItem={({item}) => <Item data={item} />}
-        keyExtractor={(item: IBlocks) => item.id}
-      />
+        {
+          screenState.loading && !screenState.error
+          ?
+          <ActivityIndicator style={{alignSelf: 'center'}} size={'large'} />
+          :
+          (screenState.error ? 
+            errorMessage()
+            :
+              <FlatList
+              data={screenState.blocks}
+              renderItem={({item}) => <Item data={item} />}
+              keyExtractor={(item: IBlocks) => item.id}
+            />
+            )
+        }
     </View>
   );
 };
