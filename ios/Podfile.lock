@@ -1060,18 +1060,20 @@ PODS:
     - React-jsi (= 0.66.1)
     - React-logger (= 0.66.1)
     - React-perflogger (= 0.66.1)
-  - ReactNativeNavigation (7.30.0-alpha.1):
+  - ReactNativeNavigation (7.29.0):
     - HMSegmentedControl
     - React-Core
     - React-RCTImage
     - React-RCTText
-    - ReactNativeNavigation/Core (= 7.30.0-alpha.1)
-  - ReactNativeNavigation/Core (7.30.0-alpha.1):
+    - ReactNativeNavigation/Core (= 7.29.0)
+  - ReactNativeNavigation/Core (7.29.0):
     - HMSegmentedControl
     - React-Core
     - React-RCTImage
     - React-RCTText
-  - RNFBApp (14.11.0):
+  - RNCAsyncStorage (1.17.10):
+    - React-Core
+  - RNFBApp (14.12.0):
     - Firebase/CoreOnly (= 8.15.0)
     - React-Core
   - RNFBAuth (15.6.0):
@@ -1142,6 +1144,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
@@ -1243,6 +1246,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeNavigation:
     :path: "../node_modules/react-native-navigation"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -1314,8 +1319,9 @@ SPEC CHECKSUMS:
   React-RCTVibration: 6600b5eed7c0fda4a433fa1198d1cb2690151791
   React-runtimeexecutor: 33a949a51bec5f8a3c9e8d8092deb259600d761e
   ReactCommon: 620442811dc6f707b4bf5e3b27d4f19c12d5a821
-  ReactNativeNavigation: 76d2483f8e84b5af708cd8b85d70cf29c304593a
-  RNFBApp: b1b5a80a676a07dea17e778bda7c1e8b69b2f5ec
+  ReactNativeNavigation: 3b09d0b7a64326dbcea7e64231287c766b18adf0
+  RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
+  RNFBApp: e4439717c23252458da2b41b81b4b475c86f90c4
   RNFBAuth: 244d01e5c92d224d34cc135596ed25a7d4af04c3
   RNFBFirestore: 20b84abc6368c37297429f810705c203022d8110
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
@@ -1324,4 +1330,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 14e7429333dcfd7baecffa12914195d2b9cd1a54
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1
