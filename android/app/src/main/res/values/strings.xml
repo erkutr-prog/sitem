@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">sitem</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">DpU5pGIqbLSEH9UQ2x6uzVsnlH4wijPOJiTCh</string>
 </resources>
