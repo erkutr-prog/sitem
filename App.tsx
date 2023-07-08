@@ -19,6 +19,7 @@ import store from './src/screens/store';
 import Login from './src/screens/Login';
 import ActionButton from 'react-native-action-button';
 import {colors} from './src/assets/colors';
+import CodePush from 'react-native-code-push';
 
 interface Props {
   title: string;
@@ -127,4 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default CodePush(App);
