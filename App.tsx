@@ -20,6 +20,7 @@ import Login from './src/screens/Login';
 import ActionButton from 'react-native-action-button';
 import {colors} from './src/assets/colors';
 import CodePush from 'react-native-code-push';
+import {API_KEY} from '@env'
 
 interface Props {
   title: string;
@@ -32,7 +33,7 @@ const App: NavigationFunctionComponent<Props> = ({componentId}) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
 
   const firebaseConfig = {
-    apiKey: '', //YOUR API KEY
+    apiKey: API_KEY, //YOUR API KEY
     authDomain: 'quizzy-1d621.firebaseapp.com',
     projectId: 'sitem-51ab4',
     databaseURL: 'https://sitem-51ab4.firebaseio.com/',
@@ -128,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CodePush(App);
+export default __DEV__ ? App : CodePush(App);

@@ -58,3 +58,4 @@ buck-out/
 *.jsbundle
 
 /android/app/google-services.json
+.env
