@@ -226,7 +226,6 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
   };
 
   const onPressDay = async (day: string, isRefresh: boolean) => {
-    console.log("***************markeddates", markedDates);
     onSelectDay(day);
     var data: IApartments;
     if (isRefresh) {
@@ -234,7 +233,6 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
     } else {
       data = allData
     }
-    console.log("**************data", data);
     if (Object.keys(markedDates).includes(day)) {
       for (let i=0; i < data.LastPayment.length; i++) {
         if (day == data.LastPayment[i].date) {

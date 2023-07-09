@@ -6,6 +6,7 @@ import { useDispatch, useSelector, Provider as ReduxProvider } from 'react-redux
 import { AppDispatch, RootState} from './store';
 import { fetchApartments } from '../features/apartmentSlice';
 import store from './store'
+import ApartmentView from '../components/ApartmentView';
 
 type Props = {
   blockId: string;
@@ -33,8 +34,6 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const screenState = useSelector((state: RootState) => state.apartmentList);
-  const [dataList, setDataList] = useState<IApartments[]>([]);
-  const [isLoading, setLoading] = useState(true);
 
   //Block List Screen event listener
   useEffect(() => {
@@ -64,20 +63,6 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
     })
   }
 
-
-  const Item = ({data, index}: {data: IApartments, index: number}) => (
-    <TouchableOpacity
-      style={styles.row}
-      activeOpacity={0.5}
-      onPress={() => navigateToCalendar(data.docId, data)}>
-      <Text style={styles.textName}>{'Daire ' + (index + 1).toString()}</Text>
-      <Text style={styles.textNumber}>
-        {data.Name}
-      </Text>
-    </TouchableOpacity>
-  )
-
-
   return (
     <View style={styles.container}>
       {screenState.loading ? 
@@ -85,7 +70,7 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
         :
         <FlatList
         data={screenState.apartments}
-        renderItem={({item, index}) => <Item data={item} index={index}/>}
+        renderItem={({item, index}) => <ApartmentView onPress={(docId, _allData) => navigateToCalendar(docId,_allData)} data={item} index={index}/>}
         keyExtractor={(item: IApartments) => item.id}
        />
       }
