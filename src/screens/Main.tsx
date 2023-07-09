@@ -1,11 +1,11 @@
 import {StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect } from 'react';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import {colors} from './../assets/colors';
-import {getBlocks} from './../../utils/Storage';
 import {useDispatch, useSelector} from 'react-redux'
 import {AppDispatch, RootState} from './store';
 import {fetchBlocks} from './../features/blockSlice';
+import BlockView from '../components/BlockView';
 
 type Props = {
   loggedIn: boolean
@@ -77,7 +77,7 @@ const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
     )
   }
 
-  function navigateToDetails(id: string) {
+  const navigateToDetails = (id: string) => {
     Navigation.push<BlockProps>(componentId, {
       component: {
         name: 'BlockDetails',
@@ -87,18 +87,6 @@ const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
       },
     });
   }
-
-  const Item = ({data}: {data: IBlocks}) => (
-    <TouchableOpacity
-      style={styles.row}
-      activeOpacity={0.5}
-      onPress={() => navigateToDetails(data.id)}>
-      <Text style={styles.textName}>{data.name}</Text>
-      <Text style={styles.textNumber}>
-        {data.numofrooms + ' Daire'}
-      </Text>
-    </TouchableOpacity>
-  );
 
   return (
     <View style={styles.container}>
@@ -112,7 +100,7 @@ const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
             :
               <FlatList
               data={screenState.blocks}
-              renderItem={({item}) => <Item data={item} />}
+              renderItem={({item}) => <BlockView data={item} onPress={(id: string) => navigateToDetails(id)}/>}
               keyExtractor={(item: IBlocks) => item.id}
             />
             )
