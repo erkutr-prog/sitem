@@ -16,6 +16,7 @@ export interface IBlocks {
   name: string;
   numofrooms: string;
   price: string;
+  userId: string
 }
 
 export interface BlockProps {
