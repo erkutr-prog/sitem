@@ -2,11 +2,7 @@ import firestore, {firebase} from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { Alert } from 'react-native';
 import { IApartments, paymentInfo } from '../src/screens/BlockDetails';
-import {
-  DateData,
-  Direction,
-  MarkedDates,
-} from 'react-native-calendars/src/types';
+import "react-native-get-random-values"
 import { v4 as uuid } from 'uuid'
 
 import {IBlocks} from '../src/screens/Main';
@@ -16,7 +12,7 @@ const user = auth().currentUser
 const getBlocks = () => {
   return firestore()
     .collection('blocks')
-    .where('id' ,'==', user?.uid)
+    .where('userId' ,'==', user?.uid)
     .get()
     .then(collectionSnapshot => {
       const blockList: Array<IBlocks> = [];
@@ -27,6 +23,7 @@ const getBlocks = () => {
           name: data.name,
           numofrooms: data.numofrooms,
           price: data.price,
+          userId: data.userId
         });
       });
       return blockList;
@@ -34,9 +31,12 @@ const getBlocks = () => {
 };
 
 const addBlocks = (blockId: string, block: IBlocks) => {
+  const uniqueBlockId = blockId + uuid()
+  block.id = uniqueBlockId
+  block.userId = blockId
   firestore()
     .collection('blocks')
-    .doc(blockId)
+    .doc(uniqueBlockId)
     .set(block)
     .then(() => console.log('added'))
     .catch(e => {
@@ -56,7 +56,7 @@ const addBlocks = (blockId: string, block: IBlocks) => {
           'Phone': '',
           'E-mail': '',
           'LastPayment': [],
-          'blockId': blockId
+          'blockId': uniqueBlockId,
         })
         .then(() => console.log("added apartment"))
         .catch(e => {

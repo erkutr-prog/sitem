@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     height: 75,
     backgroundColor: colors.LISTROW_BG,
     alignSelf: 'center',
-    marginVertical: 20,
+    marginTop: 20,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',

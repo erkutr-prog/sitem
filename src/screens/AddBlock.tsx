@@ -25,6 +25,7 @@ const AddBlock: NavigationFunctionComponent = ({
     name: '',
     numofrooms: '',
     price: '',
+    userId: userId !== undefined ? userId : ''
   });
 
   useEffect(() => {
