@@ -7,6 +7,7 @@ import {
   Direction,
   MarkedDates,
 } from 'react-native-calendars/src/types';
+import "react-native-get-random-values"
 import { v4 as uuid } from 'uuid'
 
 import {IBlocks} from '../src/screens/Main';
@@ -34,6 +35,8 @@ const getBlocks = () => {
 };
 
 const addBlocks = (blockId: string, block: IBlocks) => {
+  console.log("********block", block);
+  console.log("*********blockid", blockId);
   firestore()
     .collection('blocks')
     .doc(blockId)
