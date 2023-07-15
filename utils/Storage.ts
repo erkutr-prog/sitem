@@ -87,6 +87,38 @@ const getApartments = (blockId: string) => {
       return apartmentList;
     })
 }
+const addApartment = (blockId: string) => {
+  const apartmentuuid = 'id' + uuid();
+  firestore()
+    .collection('apartments')
+    .doc()
+    .set({
+      id: apartmentuuid,
+      Name: '',
+      Phone: '',
+      'E-mail': '',
+      LastPayment: '',
+      blockId: blockId,
+    })
+    .then(() => console.log('added apartment'))
+    .catch(e => {
+      console.log('Error when adding apartment.');
+    });
+};
+
+const changeStringField = (
+  docId: string,
+  collection: string,
+  field: string,
+  data: string,
+) => {
+  return firestore()
+    .collection(collection)
+    .doc(docId)
+    .set({
+      [field]: data,
+    }, {merge: true});
+};
 
 const getPayment = (apartmentId: string, paymentData: object) => {
 
@@ -128,4 +160,13 @@ const getApartmentDetailsByApartmentId = (apartmentId: string) => {
 }
 
 
-export {getBlocks, addBlocks, getApartments, getPayment, deletePayment, getApartmentDetailsByApartmentId};
+export {
+  getBlocks,
+  addBlocks,
+  getApartments,
+  getPayment,
+  deletePayment,
+  getApartmentDetailsByApartmentId,
+  addApartment,
+  changeStringField
+};

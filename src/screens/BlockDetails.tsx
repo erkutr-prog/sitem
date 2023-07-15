@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, View, TouchableOpacity, StyleSheet, Text, ActivityIndicator} from 'react-native';
+import {FlatList, View, TouchableOpacity, StyleSheet, Text, ActivityIndicator, Dimensions} from 'react-native';
 import {NavigationFunctionComponent, Navigation} from 'react-native-navigation';
 import { colors } from '../assets/colors';
 import { useDispatch, useSelector, Provider as ReduxProvider } from 'react-redux';
@@ -7,9 +7,11 @@ import { AppDispatch, RootState} from './store';
 import { fetchApartments } from '../features/apartmentSlice';
 import store from './store'
 import ApartmentView from '../components/ApartmentView';
+import { addApartment, changeStringField } from '../../utils/Storage';
 
 type Props = {
   blockId: string;
+  numofrooms: string;
 };
 
 export interface IApartments {
@@ -28,9 +30,12 @@ export type paymentInfo = {
   note: string
 }
 
+const {width, height} = Dimensions.get('window')
+
 const ApartmentList: NavigationFunctionComponent<Props> = ({
   componentId,
   blockId,
+  numofrooms
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const screenState = useSelector((state: RootState) => state.apartmentList);
@@ -63,6 +68,35 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
     })
   }
 
+const FooterComponent = () => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        addApartment(blockId)
+        changeStringField(blockId, 'blocks', 'numofrooms', (parseInt(numofrooms) + 1).toString())
+        dispatch(fetchApartments({blockId}))
+      }}
+      style={{
+        width: width - 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 5,
+        borderColor: colors.TEXT_INPUT,
+        alignSelf: 'center',
+        height: 55,
+        marginTop: 10,
+      }}>
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: '500',
+        }}>
+        Add New
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
   return (
     <View style={styles.container}>
       {screenState.loading ? 
@@ -72,6 +106,7 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
         data={screenState.apartments}
         renderItem={({item, index}) => <ApartmentView onPress={(docId, _allData) => navigateToCalendar(docId,_allData)} data={item} index={index}/>}
         keyExtractor={(item: IApartments) => item.id}
+        ListFooterComponent={FooterComponent}
        />
       }
     </View>
@@ -80,11 +115,12 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
 
 const BlockDetails: NavigationFunctionComponent<Props> = ({
   componentId,
-  blockId
+  blockId,
+  numofrooms
 }) => {
   return (
     <ReduxProvider store={store}>
-        <ApartmentList componentId={componentId} blockId={blockId}/>
+        <ApartmentList componentId={componentId} blockId={blockId} numofrooms={numofrooms}/>
     </ReduxProvider>
   )
 }

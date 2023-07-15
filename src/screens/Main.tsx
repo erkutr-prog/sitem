@@ -21,6 +21,7 @@ export interface IBlocks {
 
 export interface BlockProps {
   blockId: string;
+  numofrooms: string
 }
 
 const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
@@ -78,12 +79,13 @@ const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
     )
   }
 
-  const navigateToDetails = (id: string) => {
+  const navigateToDetails = (id: string, numofrooms: string) => {
     Navigation.push<BlockProps>(componentId, {
       component: {
         name: 'BlockDetails',
         passProps: {
           blockId: id,
+          numofrooms: numofrooms
         },
       },
     });
@@ -101,7 +103,7 @@ const Main: NavigationFunctionComponent<Props> = ({componentId, loggedIn}) => {
             :
               <FlatList
               data={screenState.blocks}
-              renderItem={({item}) => <BlockView data={item} onPress={(id: string) => navigateToDetails(id)}/>}
+              renderItem={({item}) => <BlockView data={item} onPress={(id: string, numofrooms: string) => navigateToDetails(id, numofrooms)}/>}
               keyExtractor={(item: IBlocks) => item.id}
             />
             )
