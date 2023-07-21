@@ -17,7 +17,7 @@ type Props = {
 export interface IApartments {
   'docId': string,
   'id': string,
-  'E-mail': string,
+  'Email': string,
   'Name': string,
   'Phone': string,
   'LastPayment': Array<paymentInfo>,
@@ -59,7 +59,7 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
   const navigateToCalendar = (docId: string, _allData: IApartments) => {
     Navigation.push(componentId, {
       component: {
-        name: 'CustomCalendar',
+        name: 'ApartmentDetails',
         passProps: {
           apartmentId: docId,
           allData: _allData

@@ -54,7 +54,7 @@ const addBlocks = (blockId: string, block: IBlocks) => {
           'id': apartmentuuid,
           'Name': '',
           'Phone': '',
-          'E-mail': '',
+          'Email': '',
           'LastPayment': [],
           'blockId': uniqueBlockId,
         })
@@ -77,7 +77,7 @@ const getApartments = (blockId: string) => {
         apartmentList.push({
           'docId': documentSnapshot.ref.id,
           'id': data.id,
-          'E-mail': data['E-mail'],
+          'Email': data['Email'],
           'Name': data['Name'],
           'Phone': data['Phone'],
           'LastPayment': data['LastPayment'],
@@ -96,7 +96,7 @@ const addApartment = (blockId: string) => {
       id: apartmentuuid,
       Name: '',
       Phone: '',
-      'E-mail': '',
+      Email: '',
       LastPayment: '',
       blockId: blockId,
     })
@@ -148,7 +148,7 @@ const getApartmentDetailsByApartmentId = (apartmentId: string) => {
       apartmentList.push({
         'docId': documentSnapshot.ref.id,
         'id': data.id,
-        'E-mail': data['E-mail'],
+        'Email': data['Email'],
         'Name': data['Name'],
         'Phone': data['Phone'],
         'LastPayment': data['LastPayment'],
