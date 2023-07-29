@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type Props = {
   data: IBlocks;
-  onPress: (id: string) => void;
+  onPress: (id: string, numofrooms: string) => void;
 };
 
 const {width, height} = Dimensions.get('window');
@@ -21,7 +21,7 @@ const BlockView = ({data, onPress}: Props) => {
   return (
     <TouchableHighlight
       underlayColor={colors.TEXT_LIGHT}
-      onPress={() => onPress(data.id)}
+      onPress={() => onPress(data.id, data.numofrooms)}
       style={styles.container}>
       <>
         <Text style={styles.nameText}>{data.name}</Text>

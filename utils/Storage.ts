@@ -54,7 +54,7 @@ const addBlocks = (blockId: string, block: IBlocks) => {
           'id': apartmentuuid,
           'Name': '',
           'Phone': '',
-          'E-mail': '',
+          'Email': '',
           'LastPayment': [],
           'blockId': uniqueBlockId,
         })
@@ -77,7 +77,7 @@ const getApartments = (blockId: string) => {
         apartmentList.push({
           'docId': documentSnapshot.ref.id,
           'id': data.id,
-          'E-mail': data['E-mail'],
+          'Email': data['Email'],
           'Name': data['Name'],
           'Phone': data['Phone'],
           'LastPayment': data['LastPayment'],
@@ -87,6 +87,38 @@ const getApartments = (blockId: string) => {
       return apartmentList;
     })
 }
+const addApartment = (blockId: string) => {
+  const apartmentuuid = 'id' + uuid();
+  firestore()
+    .collection('apartments')
+    .doc()
+    .set({
+      id: apartmentuuid,
+      Name: '',
+      Phone: '',
+      Email: '',
+      LastPayment: '',
+      blockId: blockId,
+    })
+    .then(() => console.log('added apartment'))
+    .catch(e => {
+      console.log('Error when adding apartment.');
+    });
+};
+
+const changeStringField = (
+  docId: string,
+  collection: string,
+  field: string,
+  data: string,
+) => {
+  return firestore()
+    .collection(collection)
+    .doc(docId)
+    .set({
+      [field]: data,
+    }, {merge: true});
+};
 
 const getPayment = (apartmentId: string, paymentData: object) => {
 
@@ -116,7 +148,7 @@ const getApartmentDetailsByApartmentId = (apartmentId: string) => {
       apartmentList.push({
         'docId': documentSnapshot.ref.id,
         'id': data.id,
-        'E-mail': data['E-mail'],
+        'Email': data['Email'],
         'Name': data['Name'],
         'Phone': data['Phone'],
         'LastPayment': data['LastPayment'],
@@ -128,4 +160,13 @@ const getApartmentDetailsByApartmentId = (apartmentId: string) => {
 }
 
 
-export {getBlocks, addBlocks, getApartments, getPayment, deletePayment, getApartmentDetailsByApartmentId};
+export {
+  getBlocks,
+  addBlocks,
+  getApartments,
+  getPayment,
+  deletePayment,
+  getApartmentDetailsByApartmentId,
+  addApartment,
+  changeStringField
+};
