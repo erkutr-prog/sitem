@@ -6,20 +6,26 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import CustomTextInput from '../components/CustomTextInput';
 import InputTypes from '../enums/InputTypes';
 import InputPlaceHolder from '../enums/InputPlaceholders';
-import {useApartment} from '../hooks/useApartment';
 import {IApartments, paymentInfo} from './BlockDetails';
 import {colors} from '../assets/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
+import { updateApartmentInfo } from '../../utils/Storage';
 
 type Props = {
   apartmentId: string;
   allData: IApartments;
 };
+
+export type PersonalInfo = {
+  name: string,
+  phone: string,
+  mail: string
+}
 
 const {width, height} = Dimensions.get('window');
 
@@ -28,13 +34,15 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
   apartmentId,
   allData,
 }) => {
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [mail, setMail] = useState<string>('');
   const [lastPayment, setLastPayment] = useState<paymentInfo[]>();
+  const [saveBtnDisabled, setSaveBtnDisabled] = useState<boolean>(true);
 
-  const {apartmentData, error, loading} = useApartment(allData?.id);
-  const {Name, Phone, Email, LastPayment} = apartmentData;
+  const {Name, Phone, Email, LastPayment} = allData;
+  const [currentData, setCurrentData] = useState(allData);
 
   useEffect(() => {
     setName(Name);
@@ -49,6 +57,26 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
       },
     });
   }, [Name, Phone, Email, LastPayment]);
+
+  // Catching the changes in personal information states.
+  // Also catches the save process done.
+  useEffect(() => {
+    checkForChanges()
+  }, [name, phone, mail, currentData])
+
+  // Checks if user has changed the personal information realtime
+  const checkForChanges = () => {
+    const {
+      Name,
+      Phone,
+      Email
+    } = currentData
+    if (name !== Name || phone !== Phone || mail !== Email) {
+      setSaveBtnDisabled(false)
+    } else {
+      setSaveBtnDisabled(true)
+    }
+  }
 
   const getName = () => {
     return (
@@ -124,19 +152,44 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
     );
   };
 
+  const saveChanges = async() => {
+    setLoading(true)
+    const personalInfo: PersonalInfo = {
+      name: name,
+      phone: phone,
+      mail: mail
+    }
+    await updateApartmentInfo(apartmentId, personalInfo)
+          .then(() => {
+            setCurrentData((prevState) => {
+              const newState = {...prevState}
+              newState.Name = name;
+              newState.Phone = phone;
+              newState.Email = mail
+              return newState
+            })
+          })
+    setLoading(false)
+  }
+
+  const getSaveBtn = () => {
+    return (
+      <TouchableHighlight
+        style={[styles.saveBtn, {display: saveBtnDisabled ? 'none' : 'flex'}]}
+        onPress={() => saveChanges()}
+        disabled={saveBtnDisabled}
+        underlayColor={!saveBtnDisabled ? colors.TEXT_LIGHT : '#FFFF'}>
+        <>
+          <Text>Değişiklikleri Kaydet</Text>
+        </>
+      </TouchableHighlight>
+    );
+  };
+
+
   return (
     <View style={styles.container}>
-      {error ? (
-        <>
-          <View
-            style={[
-              styles.container,
-              {justifyContent: 'center', alignItems: 'center'},
-            ]}>
-            <Text style={{fontSize: 16, fontWeight: 'bold'}}>{error}</Text>
-          </View>
-        </>
-      ) : loading ? (
+      {isLoading ? (
         <>
           <View
             style={[
@@ -152,6 +205,7 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
           {getPhone()}
           {getMail()}
           {getLastPayment()}
+          {getSaveBtn()}
         </>
       )}
     </View>
@@ -186,6 +240,17 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
     marginLeft: 10,
   },
+  saveBtn: {
+    height: 60,
+    width: width - 10,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.TEXT_GREEN,
+    borderRadius: 14,
+    bottom: 70,
+    position: 'absolute'
+  }
 });
 
 export default ApartmentDetails;

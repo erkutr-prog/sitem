@@ -33,6 +33,11 @@ const apartmentListSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchApartments.fulfilled, (state, action) =>{
+                action.payload.forEach((value, index) => {
+                    if (value.Email === undefined) {
+                        value.Email = ''
+                    }
+                })
                 state.apartments = action.payload
                 state.loading = false
             })

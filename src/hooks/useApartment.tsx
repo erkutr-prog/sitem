@@ -28,7 +28,7 @@ export const useApartment = (id: string) => {
     }
 
     getApartmentDetails(id);
-  }, []);
+  }, [id]);
 
   return {apartmentData, error, loading};
 };
