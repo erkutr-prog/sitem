@@ -6,6 +6,7 @@ import "react-native-get-random-values"
 import { v4 as uuid } from 'uuid'
 
 import {IBlocks} from '../src/screens/Main';
+import { PersonalInfo } from '../src/screens/ApartmentDetails';
 
 const user = auth().currentUser
 
@@ -148,7 +149,7 @@ const getApartmentDetailsByApartmentId = (apartmentId: string) => {
       apartmentList.push({
         'docId': documentSnapshot.ref.id,
         'id': data.id,
-        'Email': data['Email'],
+        'Email': data['Email'] || '',
         'Name': data['Name'],
         'Phone': data['Phone'],
         'LastPayment': data['LastPayment'],
@@ -156,6 +157,18 @@ const getApartmentDetailsByApartmentId = (apartmentId: string) => {
       })
     })
     return apartmentList;
+  })
+}
+
+const updateApartmentInfo = (apartmentId: string, data: PersonalInfo) => {
+  const {name, phone, mail} = data
+  return firestore()
+  .collection('apartments')
+  .doc(apartmentId)
+  .update({
+    Name: name,
+    Phone: phone,
+    Email: mail
   })
 }
 
@@ -168,5 +181,6 @@ export {
   deletePayment,
   getApartmentDetailsByApartmentId,
   addApartment,
-  changeStringField
+  changeStringField,
+  updateApartmentInfo
 };
