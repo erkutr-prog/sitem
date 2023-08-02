@@ -1,20 +1,36 @@
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableHighlight,
+  Dimensions,
+} from 'react-native';
 import React, {useState} from 'react';
 import InputTypes from '../enums/InputTypes';
 import InputPlaceHolder from '../enums/InputPlaceholders';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import InputBtnIcons from '../enums/InputBtnIcons';
+import {colors} from '../assets/colors';
 
 type Props = {
   onChangeText: (text: string) => void;
   initialText: string;
   InputType: InputTypes;
   placeholder?: InputPlaceHolder;
+  inputBtn?: InputBtnIcons;
+  inputBtnOnPress?: () => void;
 };
+
+const {width, height} = Dimensions.get('window');
 
 const CustomTextInput = ({
   onChangeText,
   initialText,
   InputType,
   placeholder,
+  inputBtn,
+  inputBtnOnPress,
 }: Props) => {
   const handleChangeText = (text: string) => {
     switch (InputType) {
@@ -53,27 +69,47 @@ const CustomTextInput = ({
   };
 
   return (
-    <TextInput
-      style={styles.input}
-      value={initialText !== undefined ? initialText : ''}
-      onChangeText={text => handleChangeText(text)}
-      keyboardType={InputType}
-      autoCapitalize={InputType == InputTypes.Email ? 'none' : undefined}
-      placeholder={placeholder ? placeholder : ''}
-    />
+    <View style={styles.container}>
+      <TextInput
+        style={[styles.input, {width: inputBtn ? '80%' : '90%'}]}
+        value={initialText !== undefined ? initialText : ''}
+        onChangeText={text => handleChangeText(text)}
+        keyboardType={InputType}
+        autoCapitalize={InputType == InputTypes.Email ? 'none' : undefined}
+        placeholder={placeholder ? placeholder : ''}
+      />
+      {inputBtn && inputBtnOnPress ? (
+        <TouchableHighlight
+          style={styles.iconContainer}
+          underlayColor={colors.TEXT_LIGHT}
+          onPress={() => inputBtnOnPress()}>
+          <Ionicons name={inputBtn} size={25} color={colors.TEXT_GREEN} />
+        </TouchableHighlight>
+      ) : null}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    width: width,
+    margin: 12,
+  },
   input: {
     backgroundColor: '#fff',
     height: 40,
-    width: '90%',
-    margin: 12,
     borderWidth: 0.2,
     padding: 10,
     alignSelf: 'flex-start',
     borderRadius: 5,
+  },
+  iconContainer: {
+    height: 40,
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 });
 

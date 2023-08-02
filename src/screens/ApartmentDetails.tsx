@@ -5,6 +5,9 @@ import {
   Dimensions,
   StyleSheet,
   ActivityIndicator,
+  Linking,
+  Alert,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import CustomTextInput from '../components/CustomTextInput';
@@ -15,6 +18,7 @@ import {colors} from '../assets/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import { updateApartmentInfo } from '../../utils/Storage';
+import InputBtnIcons from '../enums/InputBtnIcons';
 
 type Props = {
   apartmentId: string;
@@ -101,6 +105,17 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
           initialText={phone}
           InputType={InputTypes.PhoneNumber}
           placeholder={InputPlaceHolder.Phone}
+          inputBtn={InputBtnIcons.tel}
+          inputBtnOnPress={() => {
+            const phoneNumber = Platform.OS == 'android' ? `tel:${phone}` : `tel://${phone}` 
+            Linking.canOpenURL(phoneNumber)
+            .then(supported => {
+              if (!supported) {
+                Alert.alert('Phone number is not available');
+              } else {
+                return Linking.openURL((phoneNumber));
+              }})
+          }}
         />
       </View>
     );
