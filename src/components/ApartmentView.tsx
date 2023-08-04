@@ -8,7 +8,6 @@ import {
 import React from 'react';
 import {IApartments} from '../screens/BlockDetails';
 import {colors} from '../assets/colors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type Props = {
   data: IApartments;
@@ -21,18 +20,13 @@ const {width, height} = Dimensions.get('window');
 const ApartmentView = ({data, index, onPress}: Props) => {
   return (
     <TouchableHighlight
-      underlayColor={colors.TEXT_INPUT}  
+      underlayColor={colors.TEXT_INPUT}
       onPress={() => onPress(data.docId, data)}
       style={styles.container}>
       <>
         <Text style={{marginRight: 'auto', marginLeft: 20}}>
-          {'Daire ' + (index + 1).toString() + ' ' + data.Name}
+          {data.Name ? data.Name : 'Daire ' + (index + 1).toString()}
         </Text>
-        <Ionicons
-          style={styles.icon}
-          name="chevron-forward-outline"
-          size={30}
-        />
       </>
     </TouchableHighlight>
   );
