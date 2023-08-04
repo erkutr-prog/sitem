@@ -137,6 +137,13 @@ const deletePayment = (apartmentId: string, paymentData: paymentInfo) => {
     .update({LastPayment: firestore.FieldValue.arrayRemove(paymentData)})
 } 
 
+const deleteApartment = (apartmentId: string) => {
+  return firestore()
+    .collection('apartments')
+    .doc(apartmentId)
+    .delete()
+}
+
 const getApartmentDetailsByApartmentId = (apartmentId: string) => {
   return firestore()
   .collection('apartments')
@@ -182,5 +189,6 @@ export {
   getApartmentDetailsByApartmentId,
   addApartment,
   changeStringField,
-  updateApartmentInfo
+  updateApartmentInfo,
+  deleteApartment
 };
