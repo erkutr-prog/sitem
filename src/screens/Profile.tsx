@@ -12,6 +12,7 @@ import React, {useEffect, useState} from 'react';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import useTranslation from '../resources/Translation/useTranslation';
 
 const data = require('./../../store/data');
 
@@ -19,6 +20,8 @@ type Props = {};
 
 const Profile: NavigationFunctionComponent<Props> = ({componentId}) => {
   const [storeData, setStoreData] = useState<FirebaseAuthTypes.User>();
+  const { t } = useTranslation();
+  const T = t;
 
   useEffect(() => {
     const userData = auth().currentUser
@@ -70,7 +73,7 @@ const Profile: NavigationFunctionComponent<Props> = ({componentId}) => {
 
       <View style={styles.infoContainer}>
         <Text style={{fontSize: 30, fontWeight: 'bold', paddingBottom: 20}}>
-          {storeData !== undefined && storeData.displayName !== '' ? data.userName : 'User'}
+          {storeData !== undefined && storeData.displayName !== '' ? data.userName : T("User")}
         </Text>
 
         <Text style={{fontSize: 20, color: 'black', paddingBottom: 20}}>
@@ -83,7 +86,7 @@ const Profile: NavigationFunctionComponent<Props> = ({componentId}) => {
       </View>
 
       <TouchableOpacity onPress={onLogout} style={styles.logoutBtn}>
-        <Text style={{color: 'white', alignSelf: 'center'}}>Logout</Text>
+        <Text style={{color: 'white', alignSelf: 'center'}}>{T("Logout")}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

@@ -21,6 +21,7 @@ import ActionButton from 'react-native-action-button';
 import {colors} from './src/assets/colors';
 import CodePush from 'react-native-code-push';
 import {API_KEY} from '@env'
+import i18n from './src/resources/Translation/I18n';
 
 interface Props {
   title: string;
@@ -53,6 +54,7 @@ const App: NavigationFunctionComponent<Props> = ({componentId}) => {
     const subscriber = auth().onAuthStateChanged(userState => {
       if (userState) {
         checkUserExistence(userState);
+        void i18n.changeLanguage("tr");
       } else {
         setLoggedIn(false);
         setLoading(false);
@@ -79,6 +81,7 @@ const App: NavigationFunctionComponent<Props> = ({componentId}) => {
   const loginCb = async function (user: FirebaseAuthTypes.User) {
     await checkUserExistence(user);
     setLoggedIn(true);
+    void i18n.changeLanguage("tr");
   };
 
   return (

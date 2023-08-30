@@ -12,6 +12,7 @@ import {
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import {colors} from '../assets/colors';
 import auth from '@react-native-firebase/auth';
+import useTranslation from '../resources/Translation/useTranslation';
 
 import {addBlocks} from './../../utils/Storage';
 
@@ -27,6 +28,9 @@ const AddBlock: NavigationFunctionComponent = ({
     price: '',
     userId: userId !== undefined ? userId : ''
   });
+
+  const { t } = useTranslation();
+  const T = t;
 
   useEffect(() => {
     Navigation.mergeOptions(componentId, {
@@ -50,7 +54,7 @@ const AddBlock: NavigationFunctionComponent = ({
         style={styles.blockNameContainer}>
         <Text
           style={styles.blockNameHeader}>
-          Blok İsmi:
+          {T("Block Name")}
         </Text>
         <TextInput
           onChangeText={text => {
@@ -68,7 +72,7 @@ const AddBlock: NavigationFunctionComponent = ({
         style={styles.roomNumberContainer}>
         <Text
           style={styles.roomNumberHeader}>
-          Daire Sayısı:
+          {T("Apartment Number")}
         </Text>
         <TextInput
           onChangeText={number => {
@@ -87,7 +91,7 @@ const AddBlock: NavigationFunctionComponent = ({
         style={styles.priceContainer}>
         <Text
           style={styles.priceHeader}>
-          Aidat Ücreti:
+          {T("Dues price")}
         </Text>
         <TextInput
           onChangeText={number => {
@@ -107,7 +111,7 @@ const AddBlock: NavigationFunctionComponent = ({
         onPress={() => onAdd()}
         style={styles.saveBtn}>
         <Text style={{alignSelf: 'center', color: colors.TEXT_INPUT}}>
-          Kaydet
+          {T("Save")}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

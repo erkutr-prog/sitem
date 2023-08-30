@@ -24,6 +24,7 @@ import XDate from 'xdate';
 import {getPayment, deletePayment, getApartmentDetailsByApartmentId} from './../../utils/Storage';
 import {IApartments, paymentInfo} from '../screens/BlockDetails';
 import {colors} from '../assets/colors';
+import useTranslation from '../resources/Translation/useTranslation';
 
 type Props = {
   apartmentId: string;
@@ -62,6 +63,9 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
   const [infoSectionVisible, setInfoSectionVisible] = useState(false);
   const [isPriceModalVisible, setPriceModalVisible] = useState(false);
   const currentDate = useRef('');
+  
+  const { t } = useTranslation();
+  const T = t;
 
   useEffect(() => {
     Navigation.mergeOptions(componentId, {
@@ -285,7 +289,7 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
             </TouchableOpacity>
             <View
               style={{flex: 1, alignItems: 'stretch', paddingHorizontal: 0}}>
-              <Text style={styles.modalText}>Ücret:</Text>
+              <Text style={styles.modalText}>{T("Price")}</Text>
               <TextInput
                 style={{
                   height: 40,
@@ -299,7 +303,7 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
                 keyboardType="numeric"
                 placeholder="₺"
               />
-              <Text style={styles.modalText}>Açıklama:</Text>
+              <Text style={styles.modalText}>{T("Description")}</Text>
               <TextInput
                 style={{
                   height: 50,
@@ -314,7 +318,7 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
                 editable
                 numberOfLines={4}
                 maxLength={40}
-                placeholder="Not Ekle"
+                placeholder={T("Add Note")}
               />
             </View>
             <TouchableOpacity style={{alignSelf: 'center', backgroundColor: colors.TEXT_INPUT, flexDirection: 'row', alignItems: 'center', borderRadius: 12, paddingHorizontal: 15, paddingVertical: 10}} onPress={savePressed}>
@@ -322,7 +326,7 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
                 <ActivityIndicator size={'small'} color={colors.TEXT_LIGHT}/>
                 :
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Text style={{paddingHorizontal: 10}}>Kaydet</Text>
+                  <Text style={{paddingHorizontal: 10}}>{T("Save")}</Text>
                   <Ionicons name='save-outline' size={35} color={'#000'}/>  
                 </View>
             }
