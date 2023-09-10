@@ -9,6 +9,7 @@ import React from 'react';
 import {IBlocks} from '../screens/Main';
 import {colors} from '../assets/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   data: IBlocks;
@@ -18,6 +19,8 @@ type Props = {
 const {width, height} = Dimensions.get('window');
 
 const BlockView = ({data, onPress}: Props) => {
+  const { t } = useTranslation()
+  const T = t;
   return (
     <TouchableHighlight
       underlayColor={colors.TEXT_LIGHT}
@@ -26,7 +29,7 @@ const BlockView = ({data, onPress}: Props) => {
       <>
         <Text style={styles.nameText}>{data.name}</Text>
         <View style={styles.numberText}>
-          <Text style={styles.text}>{data.numofrooms + ' Daire'}</Text>
+          <Text style={styles.text}>{data.numofrooms + ' ' + T("Apartment")}</Text>
           <Ionicons
             style={styles.text}
             name="chevron-forward-outline"

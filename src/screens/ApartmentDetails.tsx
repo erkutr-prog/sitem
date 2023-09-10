@@ -19,6 +19,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import { updateApartmentInfo } from '../../utils/Storage';
 import InputBtnIcons from '../enums/InputBtnIcons';
+import useTranslation from '../resources/Translation/useTranslation';
+import i18n from '../resources/Translation/I18n';
 
 type Props = {
   apartmentId: string;
@@ -47,6 +49,9 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
 
   const {Name, Phone, Email, LastPayment} = allData;
   const [currentData, setCurrentData] = useState(allData);
+  
+  const { t } = useTranslation();
+  const T = t;
 
   useEffect(() => {
     setName(Name);
@@ -56,7 +61,7 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
     Navigation.mergeOptions(componentId, {
       topBar: {
         title: {
-          text: Name,
+          text: T(Name),
         },
       },
     });
@@ -85,12 +90,12 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
   const getName = () => {
     return (
       <View style={styles.sectionContainer}>
-        <Text style={styles.labelText}>Name</Text>
+        <Text style={styles.labelText}>{T("Name")}</Text>
         <CustomTextInput
           onChangeText={text => setName(text)}
           initialText={name}
           InputType={InputTypes.Default}
-          placeholder={InputPlaceHolder.Name}
+          placeholder={T(InputPlaceHolder.Name)}
         />
       </View>
     );
@@ -99,12 +104,12 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
   const getPhone = () => {
     return (
       <View style={styles.sectionContainer}>
-        <Text style={styles.labelText}>Phone Number</Text>
+        <Text style={styles.labelText}>{T("Phone Number")}</Text>
         <CustomTextInput
           onChangeText={text => setPhone(text)}
           initialText={phone}
           InputType={InputTypes.PhoneNumber}
-          placeholder={InputPlaceHolder.Phone}
+          placeholder={T(InputPlaceHolder.Phone) || InputPlaceHolder.Phone}
           inputBtn={InputBtnIcons.tel}
           inputBtnOnPress={() => {
             const phoneNumber = Platform.OS == 'android' ? `tel:${phone}` : `tel://${phone}` 
@@ -124,12 +129,12 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
   const getMail = () => {
     return (
       <View style={styles.sectionContainer}>
-        <Text style={styles.labelText}>E-mail</Text>
+        <Text style={styles.labelText}>{T("E-mail")}</Text>
         <CustomTextInput
           onChangeText={text => setMail(text)}
           initialText={mail}
           InputType={InputTypes.Email}
-          placeholder={InputPlaceHolder.Email}
+          placeholder={T(InputPlaceHolder.Email)}
         />
       </View>
     );
@@ -148,6 +153,7 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
   };
 
   const getLastPayment = () => {
+    const lang = i18n.language;
     return (
       <TouchableHighlight
         onPress={() => navigateToCalendar()}
@@ -155,7 +161,16 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
         underlayColor={colors.TEXT_LIGHT}>
         <>
           <Text style={styles.paymentText}>
-            {Name + ' has ' + lastPayment?.length.toString() + ' payments.'}
+            {
+              lang === "en" 
+              ?
+              
+              Name + ' has ' + lastPayment?.length.toString() + ' payments.'
+
+              :
+
+              Name + ' ' + lastPayment?.length.toString() + ' ödemesi var.'
+            }
           </Text>
           <Icon
             name="chevron-forward-outline"
@@ -195,7 +210,7 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
         disabled={saveBtnDisabled}
         underlayColor={!saveBtnDisabled ? colors.TEXT_LIGHT : '#FFFF'}>
         <>
-          <Text>Değişiklikleri Kaydet</Text>
+          <Text>{T("Save the changes")}</Text>
         </>
       </TouchableHighlight>
     );

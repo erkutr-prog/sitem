@@ -14,11 +14,12 @@ import {colors} from '../assets/colors';
 import {useDispatch, useSelector, Provider as ReduxProvider} from 'react-redux';
 import {AppDispatch, RootState} from './store';
 import {fetchApartments} from '../features/apartmentSlice';
-import store from './store';
+import {store} from './store';
 import ApartmentView from '../components/ApartmentView';
 import {addApartment, changeStringField, deleteApartment} from '../../utils/Storage';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import useTranslation from '../resources/Translation/useTranslation';
 
 type Props = {
   blockId: string;
@@ -43,13 +44,15 @@ export type paymentInfo = {
 
 const {width, height} = Dimensions.get('window');
 
-const ApartmentList: NavigationFunctionComponent<Props> = ({
+const BlockDetails: NavigationFunctionComponent<Props> = ({
   componentId,
   blockId,
   numofrooms,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const screenState = useSelector((state: RootState) => state.apartmentList);
+  const { t } = useTranslation();
+  const T = t;
 
   //Block List Screen event listener
   useEffect(() => {
@@ -98,7 +101,7 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
             fontSize: 16,
             fontWeight: '500',
           }}>
-          Add New
+          {T("Add New")}
         </Text>
       </TouchableOpacity>
     );
@@ -121,7 +124,7 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
   const onDeleteApartment = async(id: string) => {
     Alert.alert(
       'Warning',
-      'Daireyi silmek istediğinize emin misiniz?',
+      T('Daireyi silmek istediğinize emin misiniz?'),
       [
         {
           text: 'Yes',
@@ -175,22 +178,6 @@ const ApartmentList: NavigationFunctionComponent<Props> = ({
         />
       )}
     </View>
-  );
-};
-
-const BlockDetails: NavigationFunctionComponent<Props> = ({
-  componentId,
-  blockId,
-  numofrooms,
-}) => {
-  return (
-    <ReduxProvider store={store}>
-      <ApartmentList
-        componentId={componentId}
-        blockId={blockId}
-        numofrooms={numofrooms}
-      />
-    </ReduxProvider>
   );
 };
 
