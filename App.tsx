@@ -43,7 +43,7 @@ const App: NavigationFunctionComponent<Props> = ({componentId}) => {
     appId: '1:418648071483:android:622b476b46f093e5636b1e',
   };
 
-  if (Platform.OS == 'android' && !firebase.firebase.app.length) {
+  if (Platform.OS == 'android' && !firebase.firebase.apps.length) {
     var app;
     if (!firebase.firebase.apps.length) {
       app = firebase.firebase.initializeApp(firebaseConfig);
