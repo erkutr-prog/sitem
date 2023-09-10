@@ -38,5 +38,7 @@
     "Enter your name": "Enter your name",
     "Enter your email": "Enter your email",
     "Enter your password": "Enter your password",
-    "Change Language": "Change Language"
+    "Change Language": "Change Language",
+    "Uyarı": "Warning",
+    "Çıkış yapmak istediğinize emin misiniz?": "Are you sure you want to logout?"
 }
