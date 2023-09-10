@@ -17,7 +17,7 @@ type Props = {
   onChangeText: (text: string) => void;
   initialText: string;
   InputType: InputTypes;
-  placeholder?: InputPlaceHolder;
+  placeholder?: InputPlaceHolder | string;
   inputBtn?: InputBtnIcons;
   inputBtnOnPress?: () => void;
 };

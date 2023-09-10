@@ -206,7 +206,7 @@ const CustomCalendar: NavigationFunctionComponent<Props> = ({
             color: 'blue',
           }}>
           {day != undefined
-            ? month[day.getUTCMonth()] + ' ' + day.getFullYear()
+            ? T(month[day.getUTCMonth()]) + ' ' + day.getFullYear()
             : null}
         </Text>
       </View>

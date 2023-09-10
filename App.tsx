@@ -14,15 +14,14 @@ import {Navigation, NavigationFunctionComponent} from 'react-native-navigation';
 import Main from './src/screens/Main';
 import * as firebase from '@react-native-firebase/firestore';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import {Provider as ReduxProvider} from 'react-redux';
-import store from './src/screens/store';
 import Login from './src/screens/Login';
 import ActionButton from 'react-native-action-button';
 import {colors} from './src/assets/colors';
 import CodePush from 'react-native-code-push';
-import {API_KEY} from '@env'
+import {API_KEY} from '@env';
 import i18n from './src/resources/Translation/I18n';
-
+import { useSelector } from 'react-redux';
+import { RootState } from './src/screens/store';
 interface Props {
   title: string;
 }
@@ -32,6 +31,7 @@ const data = require('./store/data');
 const App: NavigationFunctionComponent<Props> = ({componentId}) => {
   const [isLoading, setLoading] = useState(true);
   const [isLoggedIn, setLoggedIn] = useState(false);
+  const langState = useSelector((state: RootState) => state.userPreferenceSlice)
 
   const firebaseConfig = {
     apiKey: API_KEY, //YOUR API KEY
@@ -54,7 +54,7 @@ const App: NavigationFunctionComponent<Props> = ({componentId}) => {
     const subscriber = auth().onAuthStateChanged(userState => {
       if (userState) {
         checkUserExistence(userState);
-        void i18n.changeLanguage("tr");
+        void i18n.changeLanguage(langState.lang)
       } else {
         setLoggedIn(false);
         setLoading(false);
@@ -81,40 +81,38 @@ const App: NavigationFunctionComponent<Props> = ({componentId}) => {
   const loginCb = async function (user: FirebaseAuthTypes.User) {
     await checkUserExistence(user);
     setLoggedIn(true);
-    void i18n.changeLanguage("tr");
+    void i18n.changeLanguage(langState.lang)
   };
 
   return (
-    <ReduxProvider store={store}>
-      <View style={styles.container}>
-        {isLoading ? (
-          <ActivityIndicator size={'large'} />
-        ) : (
-          <View style={styles.container}>
-            {isLoggedIn ? (
-              <Main componentId={componentId} loggedIn={isLoggedIn} />
-            ) : (
-              <Login
-                componentId={componentId}
-                loginCallback={(user: FirebaseAuthTypes.User) => loginCb(user)}
-              />
-            )}
-          </View>
-        )}
-        {isLoggedIn ? (
-          <ActionButton
-            buttonColor={colors.TEXT_DARK}
-            onPress={() => {
-              Navigation.push(componentId, {
-                component: {
-                  name: 'AddBlock',
-                },
-              });
-            }}
-          />
-        ) : null}
-      </View>
-    </ReduxProvider>
+    <View style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator size={'large'} />
+      ) : (
+        <View style={styles.container}>
+          {isLoggedIn ? (
+            <Main componentId={componentId} loggedIn={isLoggedIn} />
+          ) : (
+            <Login
+              componentId={componentId}
+              loginCallback={(user: FirebaseAuthTypes.User) => loginCb(user)}
+            />
+          )}
+        </View>
+      )}
+      {isLoggedIn ? (
+        <ActionButton
+          buttonColor={colors.TEXT_DARK}
+          onPress={() => {
+            Navigation.push(componentId, {
+              component: {
+                name: 'AddBlock',
+              },
+            });
+          }}
+        />
+      ) : null}
+    </View>
   );
 };
 

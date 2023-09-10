@@ -61,7 +61,7 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
     Navigation.mergeOptions(componentId, {
       topBar: {
         title: {
-          text: Name,
+          text: T(Name),
         },
       },
     });
@@ -95,7 +95,7 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
           onChangeText={text => setName(text)}
           initialText={name}
           InputType={InputTypes.Default}
-          placeholder={InputPlaceHolder.Name}
+          placeholder={T(InputPlaceHolder.Name)}
         />
       </View>
     );
@@ -109,7 +109,7 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
           onChangeText={text => setPhone(text)}
           initialText={phone}
           InputType={InputTypes.PhoneNumber}
-          placeholder={InputPlaceHolder.Phone}
+          placeholder={T(InputPlaceHolder.Phone) || InputPlaceHolder.Phone}
           inputBtn={InputBtnIcons.tel}
           inputBtnOnPress={() => {
             const phoneNumber = Platform.OS == 'android' ? `tel:${phone}` : `tel://${phone}` 
@@ -134,7 +134,7 @@ const ApartmentDetails: NavigationFunctionComponent<Props> = ({
           onChangeText={text => setMail(text)}
           initialText={mail}
           InputType={InputTypes.Email}
-          placeholder={InputPlaceHolder.Email}
+          placeholder={T(InputPlaceHolder.Email)}
         />
       </View>
     );

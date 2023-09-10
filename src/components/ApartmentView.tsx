@@ -8,6 +8,7 @@ import {
 import React from 'react';
 import {IApartments} from '../screens/BlockDetails';
 import {colors} from '../assets/colors';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   data: IApartments;
@@ -18,6 +19,8 @@ type Props = {
 const {width, height} = Dimensions.get('window');
 
 const ApartmentView = ({data, index, onPress}: Props) => {
+  const { t } = useTranslation()
+  const T = t;
   return (
     <TouchableHighlight
       underlayColor={colors.TEXT_INPUT}
@@ -25,7 +28,7 @@ const ApartmentView = ({data, index, onPress}: Props) => {
       style={styles.container}>
       <>
         <Text style={{marginRight: 'auto', marginLeft: 20}}>
-          {data.Name ? data.Name : 'Daire ' + (index + 1).toString()}
+          {data.Name ? data.Name : T("Apartment") + ' ' + (index + 1).toString()}
         </Text>
       </>
     </TouchableHighlight>

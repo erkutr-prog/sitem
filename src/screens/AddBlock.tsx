@@ -36,7 +36,7 @@ const AddBlock: NavigationFunctionComponent = ({
     Navigation.mergeOptions(componentId, {
       topBar: {
         title: {
-          text: 'Blok Ekle',
+          text: T('Blok Ekle'),
         },
       },
     });
