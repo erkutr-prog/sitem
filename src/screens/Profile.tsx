@@ -54,7 +54,7 @@ const Profile: NavigationFunctionComponent<Props> = ({componentId}) => {
 
 
   const onLogout = async () => {
-    Alert.alert('Uyarı', 'Çıkış yapmak istediğinize emin misiniz?', [
+    Alert.alert(T('Uyarı'), T('Çıkış yapmak istediğinize emin misiniz?'), [
       {
         text: 'Yes',
         onPress: () => logout(),
