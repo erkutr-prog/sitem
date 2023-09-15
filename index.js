@@ -12,6 +12,7 @@ import ApartmentDetails from './src/screens/ApartmentDetails';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import { persistor, store } from './src/screens/store';
+import TopBarBackButton from './src/components/TopBarBackButton';
 
 Navigation.registerComponent(
   'com.myApp.WelcomeScreen',
@@ -120,6 +121,18 @@ Navigation.registerComponent(
       </Provider>
     ),
   () => ApartmentDetails,
+);
+Navigation.registerComponent(
+  'TopBarBackButton',
+  () => (props) =>
+    (
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <TopBarBackButton {...props}/>
+        </PersistGate>
+      </Provider>
+    ),
+  () => TopBarBackButton,
 );
 /* Navigation.registerComponent('TopButton', () => TopButton);
 Navigation.registerComponent('AddBlock', () => AddBlock);

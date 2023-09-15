@@ -29,7 +29,11 @@ export const fetchApartments = createAsyncThunk(
 const apartmentListSlice = createSlice({
     name: 'apartmentList',
     initialState: initialState,
-    reducers: {},
+    reducers: {
+        setLoading(state, action) {
+            state.loading = action.payload
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchApartments.fulfilled, (state, action) =>{
@@ -47,4 +51,5 @@ const apartmentListSlice = createSlice({
     }
 })
 
+export const {setLoading} = apartmentListSlice.actions;
 export default apartmentListSlice.reducer;

@@ -7,19 +7,22 @@ import {
   Text,
   ActivityIndicator,
   Dimensions,
+  BackHandler,
   Alert,
 } from 'react-native';
 import {NavigationFunctionComponent, Navigation} from 'react-native-navigation';
 import {colors} from '../assets/colors';
 import {useDispatch, useSelector, Provider as ReduxProvider} from 'react-redux';
 import {AppDispatch, RootState} from './store';
-import {fetchApartments} from '../features/apartmentSlice';
+import {fetchApartments, setLoading} from '../features/apartmentSlice';
 import {store} from './store';
 import ApartmentView from '../components/ApartmentView';
 import {addApartment, changeStringField, deleteApartment} from '../../utils/Storage';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import useTranslation from '../resources/Translation/useTranslation';
+import Icon from 'react-native-vector-icons/Ionicons';
+import TopBarBackButton from '../components/TopBarBackButton';
 
 type Props = {
   blockId: string;
@@ -56,6 +59,26 @@ const BlockDetails: NavigationFunctionComponent<Props> = ({
 
   //Block List Screen event listener
   useEffect(() => {
+    Navigation.mergeOptions(componentId, {
+      topBar: {
+        leftButtons: [
+          {
+            id: 'TopBarBackButton',
+            component: {
+              name: 'TopBarBackButton',
+              passProps: {
+                onPress: onBack
+              }
+            }
+          }
+        ]
+      }
+    })
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      dispatch(setLoading(true));
+      Navigation.pop(componentId);
+      return true
+    })
     const listener = {
       componentDidAppear: () => {
         dispatch(fetchApartments({blockId}))
@@ -69,6 +92,11 @@ const BlockDetails: NavigationFunctionComponent<Props> = ({
       unsubscribe.remove();
     };
   }, []);
+
+  const onBack = () => {
+    dispatch(setLoading(true))
+    Navigation.pop(componentId)
+  }
 
   const navigateToCalendar = (docId: string, _allData: IApartments) => {
     Navigation.push(componentId, {
