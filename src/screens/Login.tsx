@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth'
 import { colors } from '../assets/colors'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {Navigation, NavigationFunctionComponent} from 'react-native-navigation'
+import useTranslation from '../resources/Translation/useTranslation'
 
 type Props = {
     loginCallback: Function
@@ -14,6 +15,8 @@ const data = require('./../../store/data')
 const Login: NavigationFunctionComponent<Props> = ({loginCallback, componentId}) => {
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
+    const { t } = useTranslation();
+    const T = t;
 
     async function onLogin() {
         await auth().signInWithEmailAndPassword(mail.toLowerCase(), password)
@@ -30,10 +33,10 @@ const Login: NavigationFunctionComponent<Props> = ({loginCallback, componentId})
     <View style= {styles.container}>
     <View style={{flex: 1, backgroundColor: colors.LISTROW_BG, justifyContent: 'center', paddingBottom: 70 }}>
         <Icon style={{alignSelf: 'center'}} name='apartment' size={150} />
-        <TextInput style={styles.input} placeholder="E-mail"  onChangeText={text => setMail(text)}></TextInput>
-        <TextInput style={styles.input} secureTextEntry placeholder="Password"  onChangeText={text => setPassword(text)}></TextInput>
+        <TextInput style={styles.input} placeholder={T("E-mail")}  onChangeText={text => setMail(text)}></TextInput>
+        <TextInput style={styles.input} secureTextEntry placeholder={T("Password")}  onChangeText={text => setPassword(text)}></TextInput>
         <TouchableOpacity style={styles.btn} onPress={() => onLogin()}>
-            <Text>Giriş Yap</Text>
+            <Text>{T("Login")}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={() => Navigation.push(componentId, {
             component: {
@@ -41,7 +44,7 @@ const Login: NavigationFunctionComponent<Props> = ({loginCallback, componentId})
                 passProps: {}
             }
         })}>
-            <Text>Kayıt Ol</Text>
+            <Text>{T("Register")}</Text>
         </TouchableOpacity>
     </View>
 </View>

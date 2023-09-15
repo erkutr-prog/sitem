@@ -38,7 +38,5 @@
 	<string>XFWK</string>
 	<key>XCFrameworkFormatVersion</key>
 	<string>1.0</string>
-<key>UIViewControllerBasedStatusBarAppearance</key>
-<true/>
 </dict>
 </plist>
